@@ -4,7 +4,7 @@ function TodosPage(props) {
     const [todos, setTodos] = useState([]);
     const [input, setInput] = useState('');
     const [selectedTodo, setSelectedTodo] = useState(null);
-    const inputRef = useRef(null); // Реф для поля ввода
+    const inputRef = useRef(null);
 
     async function getTodos() {
         const response = await fetch('http://localhost:8000/todos');
@@ -15,7 +15,6 @@ function TodosPage(props) {
     async function createOrUpdateTodo() {
         let response;
         if (selectedTodo) {
-            // Обновление существующей задачи
             const updatedTodo = {
                 ...selectedTodo,
                 title: input,
@@ -28,7 +27,6 @@ function TodosPage(props) {
                 body: JSON.stringify(updatedTodo)
             });
         } else {
-            // Создание новой задачи
             const newTodo = {
                 title: input,
                 status: false
@@ -44,8 +42,8 @@ function TodosPage(props) {
 
         if (response.ok) {
             getTodos();
-            setSelectedTodo(null); // Сброс выбранной задачи
-            setInput(""); // Сброс Input после создания/обновления задачи
+            setSelectedTodo(null); 
+            setInput(""); 
         }
     }
 
@@ -79,8 +77,7 @@ function TodosPage(props) {
 
     function handleUpdateClick(todo) {
         setSelectedTodo(todo);
-        setInput(todo.title); // Устанавливаем текущий заголовок задачи в Input
-        // Устанавливаем фокус на поле ввода при нажатии на кнопку "Update"
+        setInput(todo.title); 
         inputRef.current.focus();
     }
 
@@ -97,27 +94,19 @@ function TodosPage(props) {
                     createOrUpdateTodo();
                 }}
             >
-                <input
-                    ref={inputRef} // Привязываем реф к полю ввода
-                    value={input}
-                    type="text"
+                <input ref={inputRef} value={input} type="text"
                     onChange={(event) => setInput(event.target.value)}
                 />
                 <button type="submit">{selectedTodo ? "Update" : "Create Todo"}</button>
             </form>
             {todos.map((todo) => (
                 <p key={todo.id} className={todo.status ? 'line' : ''}>
-                    <input
-                        type="checkbox"
-                        checked={todo.status}
+                    <input type="checkbox" checked={todo.status}
                         onChange={(event) => changeStatus(todo.id, event.target.checked)}
                     />
                     {selectedTodo && selectedTodo.id === todo.id ? (
-                        // Поле ввода только для выбранной задачи
-                        <input
-                            ref={inputRef} // Привязываем реф к полю ввода
-                            value={input}
-                            type="text"
+                        
+                        <input ref={inputRef} value={input} type="text"
                             onChange={(event) => setInput(event.target.value)}
                         />
                     ) : (
